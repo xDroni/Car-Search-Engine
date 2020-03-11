@@ -1,0 +1,25 @@
+{
+  "extends": [
+    "plugin:prettier/recommended",
+    "plugin:react/recommended"
+  ],
+  "plugins": [
+    "prettier",
+    "react"
+  ],
+  "rules": {
+    "prefer-const": 2,
+    "sort-imports": "off",
+    "import/order": "off"
+  },
+  "parserOptions": {
+    "ecmaVersion": 2018,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "env": {
+    "es6": true
+  }
+}
