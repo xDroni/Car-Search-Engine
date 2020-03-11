@@ -2,15 +2,13 @@ const fetch = require('node-fetch');
 const cheerio = require('cheerio');
 const { URLSearchParams } = require('url');
 
-const URL = 'https://www.otomoto.pl/ajax/search/list/';
-
-async function getData(car, params) {
+async function getData(url, car, params) {
   const body = new URLSearchParams();
   for (const k in params) {
     if (!params.hasOwnProperty(k)) continue;
     body.append(k, params[k]);
   }
-  const data = await fetch(URL, { method: 'POST', body: body })
+  const data = await fetch(url, { method: 'POST', body: body })
     .then(res => res.text())
     .then(res => res)
     .catch(err => {
@@ -102,4 +100,4 @@ async function getData(car, params) {
     .get();
 }
 
-module.exports = { getData };
+module.exports = getData;

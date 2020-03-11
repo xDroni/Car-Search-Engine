@@ -5,7 +5,15 @@ const bodyNames = {
     carName: 'search[filter_enum_make]',
     category: 'search[category_id]:'
   },
-  allegro: {} //TODO
+  allegro: {
+    priceFrom: 'price.from',
+    priceTo: 'price.to',
+    carName: 'phrase',
+    category: 'category.id',
+    location: 'location.city',
+    limit: 'limit',
+    offset: 'offset'
+  }
 };
 
 module.exports = { bodyNames };

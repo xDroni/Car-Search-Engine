@@ -3,25 +3,49 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
 
-const { getOtoMotoData } = require('./core');
+const getOtoMotoData = require('./otomoto');
+const getAllegroData = require('./allegro');
 const { bodyNames } = require('./utils');
 
 const app = express();
-const carRoutes = express.Router();
+const otomotoRoute = express.Router();
+const allegroRoute = express.Router();
 const PORT = 4000;
 
 app.use(cors());
 app.use(bodyParser.json());
-app.use('/cars', carRoutes);
+app.use('/otomoto', otomotoRoute);
+app.use('/allegro', allegroRoute);
 
-carRoutes.route('/:car').get(async (req, res) => {
+otomotoRoute.route('/:car').get(async (req, res) => {
+  const url = 'https://www.otomoto.pl/ajax/search/list/';
   const params = {
+    [bodyNames.otomoto.category]: 29,
     [bodyNames.otomoto.priceFrom]: 3000,
     [bodyNames.otomoto.priceTo]: 5000,
-    [bodyNames.otomoto.category]: 29,
     [bodyNames.otomoto.carName]: req.params.car
-  }; //TODO hardcoded params here
-  const data = await getOtoMotoData(req.params.car, params);
+  };
+  const data = await getOtoMotoData(url, req.params.car, params);
+  res.json({ data });
+});
+
+allegroRoute.route('/:car').get(async (req, res) => {
+  const url = 'https://api.allegro.pl/offers/listing?';
+  const params = {
+    [bodyNames.allegro.category]: 4029,
+    [bodyNames.allegro.limit]: 10,
+    // [bodyNames.allegro.priceFrom]: 0,
+    // [bodyNames.allegro.priceTo]: 10000,
+    [bodyNames.allegro.carName]: req.params.car,
+    [bodyNames.allegro.location]: 'Warszawa'
+  };
+  const data = await getAllegroData(url, req.params.car, params);
+  res.json({ data });
+});
+
+allegroRoute.route('/id/:id').get(async (req, res) => {
+  const url = `https://api.allegro.pl/sale/offers/${req.params.id}`;
+  const data = await getAllegroData(url);
   res.json({ data });
 });
 
