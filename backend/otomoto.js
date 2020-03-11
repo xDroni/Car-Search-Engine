@@ -12,7 +12,7 @@ async function getData(url, car, params) {
     .then(res => res.text())
     .then(res => res)
     .catch(err => {
-      console.error(err);
+      return Promise.reject(err);
     });
 
   const $ = cheerio.load(data);

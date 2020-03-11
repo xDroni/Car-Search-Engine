@@ -25,8 +25,13 @@ otomotoRoute.route('/:car').get(async (req, res) => {
     [bodyNames.otomoto.priceTo]: 5000,
     [bodyNames.otomoto.carName]: req.params.car
   };
-  const data = await getOtoMotoData(url, req.params.car, params);
-  res.json({ data });
+  getOtoMotoData(url, req.params.car, params)
+    .then(data => {
+      res.json({ data });
+    })
+    .catch(err => {
+      res.status(500).send(err);
+    });
 });
 
 allegroRoute.route('/:car').get(async (req, res) => {
@@ -34,13 +39,18 @@ allegroRoute.route('/:car').get(async (req, res) => {
   const params = {
     [bodyNames.allegro.category]: 4029,
     [bodyNames.allegro.limit]: 10,
-    // [bodyNames.allegro.priceFrom]: 0,
-    // [bodyNames.allegro.priceTo]: 10000,
-    [bodyNames.allegro.carName]: req.params.car,
-    [bodyNames.allegro.location]: 'Warszawa'
+    [bodyNames.allegro.priceFrom]: 5000,
+    [bodyNames.allegro.priceTo]: 10000,
+    [bodyNames.allegro.carName]: req.params.car
+    // [bodyNames.allegro.location]: 'Warszawa'
   };
-  const data = await getAllegroData(url, req.params.car, params);
-  res.json({ data });
+  getAllegroData(url, req.params.car, params)
+    .then(data => {
+      res.json({ data });
+    })
+    .catch(err => {
+      res.status(500).send(err);
+    });
 });
 
 allegroRoute.route('/id/:id').get(async (req, res) => {
