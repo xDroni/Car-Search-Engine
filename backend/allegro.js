@@ -1,6 +1,7 @@
 const fetch = require('node-fetch');
 
 const secret = require('./auth.json');
+const { bodyNames } = require('./utils');
 const offerBaseUrl = 'https://allegro.pl/ogloszenie/';
 const categoryBaseUrl = 'https://api.allegro.pl/sale/categories/';
 
@@ -29,7 +30,7 @@ async function getCategoriesNames(items, car) {
             }
           });
           const parentCategory = await data.json();
-          if (parentCategory.name.toLowerCase().indexOf(car.toLowerCase()) === -1)
+          if (car.toLowerCase().indexOf(parentCategory.name.toLowerCase()) === -1)
             categories[offer.category.id] = parentCategory.name + ' ' + categories[offer.category.id];
         }
       }
@@ -75,8 +76,8 @@ async function getData(url, car, params) {
           car_mileage: null,
           car_engineCapacity: null,
           car_fuelType: null,
-          car_city: params.city || null,
-          car_region: params.region || null,
+          car_city: params[bodyNames.allegro.location] || null,
+          car_region: params[bodyNames.allegro.region] || null,
           car_fullPage: `${offerBaseUrl}${offer.id}`,
           car_image: offer.images[0].url,
           car_price: offer.sellingMode.price.amount,

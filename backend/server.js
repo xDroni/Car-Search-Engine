@@ -21,10 +21,12 @@ otomotoRoute.route('/:car').get(async (req, res) => {
   const url = 'https://www.otomoto.pl/ajax/search/list/';
   const params = {
     [bodyNames.otomoto.category]: 29,
-    [bodyNames.otomoto.priceFrom]: 3000,
-    [bodyNames.otomoto.priceTo]: 5000,
     [bodyNames.otomoto.carName]: req.params.car
   };
+  for (const key in req.query) {
+    if (!req.query.hasOwnProperty(key)) continue;
+    params[bodyNames.otomoto[key]] = req.query[key];
+  }
   getOtoMotoData(url, req.params.car, params)
     .then(data => {
       res.json({ data });
@@ -39,11 +41,13 @@ allegroRoute.route('/:car').get(async (req, res) => {
   const params = {
     [bodyNames.allegro.category]: 4029,
     [bodyNames.allegro.limit]: 10,
-    [bodyNames.allegro.priceFrom]: 20000,
-    [bodyNames.allegro.priceTo]: 100000,
     [bodyNames.allegro.carName]: req.params.car
-    // [bodyNames.allegro.location]: 'Warszawa'
   };
+  for (const key in req.query) {
+    if (!req.query.hasOwnProperty(key)) continue;
+    params[bodyNames.allegro[key]] = req.query[key];
+  }
+
   getAllegroData(url, req.params.car, params)
     .then(data => {
       res.json({ data });
@@ -51,12 +55,6 @@ allegroRoute.route('/:car').get(async (req, res) => {
     .catch(err => {
       res.status(500).send(err);
     });
-});
-
-allegroRoute.route('/id/:id').get(async (req, res) => {
-  const url = `https://api.allegro.pl/sale/offers/${req.params.id}`;
-  const data = await getAllegroData(url);
-  res.json({ data });
 });
 
 app.listen(PORT, () => {
