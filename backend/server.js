@@ -39,8 +39,8 @@ allegroRoute.route('/:car').get(async (req, res) => {
   const params = {
     [bodyNames.allegro.category]: 4029,
     [bodyNames.allegro.limit]: 10,
-    [bodyNames.allegro.priceFrom]: 5000,
-    [bodyNames.allegro.priceTo]: 10000,
+    [bodyNames.allegro.priceFrom]: 20000,
+    [bodyNames.allegro.priceTo]: 100000,
     [bodyNames.allegro.carName]: req.params.car
     // [bodyNames.allegro.location]: 'Warszawa'
   };

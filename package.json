@@ -21,7 +21,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "server": "nodemon backend/server.js"
+    "server": "nodemon backend/server.js",
+    "auth": "node backend/authAllegro.js"
   },
   "eslintConfig": {
     "extends": "react-app"
