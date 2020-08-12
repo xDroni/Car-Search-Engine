@@ -1,7 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const mongoose = require('mongoose');
 
 const getOtoMotoData = require('./otomoto');
 const getAllegroData = require('./allegro');
@@ -21,7 +20,7 @@ otomotoRoute.route('/:car').get(async (req, res) => {
   const url = 'https://www.otomoto.pl/ajax/search/list/';
   const params = {
     [bodyNames.otomoto.category]: 29,
-    [bodyNames.otomoto.carName]: req.params.car
+    [bodyNames.otomoto.query]: req.params.car
   };
   for (const key in req.query) {
     if (!req.query.hasOwnProperty(key)) continue;
@@ -29,7 +28,7 @@ otomotoRoute.route('/:car').get(async (req, res) => {
   }
   getOtoMotoData(url, req.params.car, params)
     .then(data => {
-      res.json({ data });
+      res.json(data);
     })
     .catch(err => {
       res.status(500).send(err);
@@ -39,18 +38,18 @@ otomotoRoute.route('/:car').get(async (req, res) => {
 allegroRoute.route('/:car').get(async (req, res) => {
   const url = 'https://api.allegro.pl/offers/listing?';
   const params = {
-    [bodyNames.allegro.category]: 4029,
-    [bodyNames.allegro.limit]: 10,
-    [bodyNames.allegro.carName]: req.params.car
+    [bodyNames.allegro.api.category]: 4029,
+    [bodyNames.allegro.api.limit]: 10,
+    [bodyNames.allegro.api.carName]: req.params.car
   };
   for (const key in req.query) {
     if (!req.query.hasOwnProperty(key)) continue;
-    params[bodyNames.allegro[key]] = req.query[key];
+    params[bodyNames.allegro.api[key]] = req.query[key];
   }
 
   getAllegroData(url, req.params.car, params)
     .then(data => {
-      res.json({ data });
+      res.json(data);
     })
     .catch(err => {
       res.status(500).send(err);
