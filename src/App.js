@@ -31,16 +31,24 @@ function App() {
       })
       .join('&');
 
-    console.log(params);
+    const fetchUrls = [
+      `${APICallURL}:${APICallPORT}/${otomotoEndpoint}/${formData.query}?${params}`, // otomoto call
+      `${APICallURL}:${APICallPORT}/${allegroEndpoint}/${formData.query}?${params}` // allegro call
+    ];
 
-    // api call
-    fetch(`${APICallURL}:${APICallPORT}/${otomotoEndpoint}/${formData.query}?${params}`)
-      .then(response => response.json())
-      .then(data => {
-        setApiData({ otomoto: data });
-        setLoading(false);
-        setNeverFetched(false);
-      });
+    const fetchPromises = fetchUrls.map(url => fetch(url).then(response => response.json()));
+    Promise.all(fetchPromises).then(results => {
+      const data = {};
+      for (const result of results) {
+        for (const key in result) {
+          data[key] = result[key];
+        }
+      }
+
+      setApiData(data);
+      setLoading(false);
+      setNeverFetched(false);
+    });
   }, [formData]);
 
   return (

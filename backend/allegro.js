@@ -112,14 +112,14 @@ async function getData(url, car, params) {
           car_name: car,
           car_model: categories[offer.category.id],
           car_description: offer.name,
-          car_productionYear: extraData[offer.id].car_productionYear || null,
-          car_mileage: extraData[offer.id].car_mileage || null,
-          car_engineCapacity: extraData[offer.id].car_engineCapacity || null,
-          car_fuelType: extraData[offer.id].car_fuelType || null,
-          car_city: extraData[offer.id].car_city || null,
+          car_productionYear: extraData[offer.id].car_productionYear ? extraData[offer.id].car_productionYear : null,
+          car_mileage: extraData[offer.id].car_mileage ? extraData[offer.id].car_mileage : null,
+          car_engineCapacity: extraData[offer.id].car_engineCapacity ? extraData[offer.id].car_engineCapacity : null,
+          car_fuelType: extraData[offer.id].car_fuelType ? extraData[offer.id].car_fuelType : null,
+          car_city: extraData[offer.id].car_city ? extraData[offer.id].car_city : null,
           car_region: params[bodyNames.allegro.api.region] || null,
           car_fullPage: offer.vendor ? offer.vendor.url : `${offerBaseUrl}${offer.id}`,
-          car_image: offer.images[0].url,
+          car_image: offer.images[0].url.replace('/original/', '/s192/'),
           car_price: offer.sellingMode.price.amount,
           car_priceCurrency: offer.sellingMode.price.currency
         });
@@ -127,13 +127,21 @@ async function getData(url, car, params) {
     }
 
     return {
-      available: json.searchMeta.availableCount,
-      total: json.searchMeta.totalCount,
-      items
+      allegro: {
+        available: json.searchMeta.availableCount,
+        total: json.searchMeta.totalCount,
+        items
+      }
     };
   } catch (e) {
     console.error(e);
-    return Promise.reject(json);
+    return Promise.reject({
+      allegro: {
+        available: 0,
+        total: 0,
+        items: []
+      }
+    });
   }
 }
 
