@@ -2,7 +2,7 @@ const fetch = require('node-fetch');
 const cheerio = require('cheerio');
 const { URLSearchParams } = require('url');
 
-async function getData(url, car, params) {
+async function getData(url, car, params, page) {
   const body = new URLSearchParams();
   for (const k in params) {
     if (!params.hasOwnProperty(k)) continue;
@@ -31,6 +31,8 @@ async function getData(url, car, params) {
 
   const carEntries = $('article');
 
+  // const carEntries = carList.slice(((page - 1) * offset) % 30, (((page - 1) * offset) % 30) + offset);
+
   return {
     otomoto: {
       current: 1,
@@ -45,7 +47,7 @@ async function getData(url, car, params) {
                 .find('img')
                 .attr('data-src')
                 .trim()
-                .replace(/s=([0-9]*x[0-9]*;)/, '') || null;
+                .replace(/s=([0-9]*x[0-9]*)/, '') || null;
           } catch (e) {
             image = null;
           }

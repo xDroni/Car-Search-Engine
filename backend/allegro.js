@@ -4,42 +4,7 @@ const cheerio = require('cheerio');
 const authAllegro = require('./authAllegro');
 const { bodyNames } = require('./utils');
 const offerBaseUrl = 'https://allegro.pl/ogloszenie/';
-const categoryBaseUrl = 'https://api.allegro.pl/sale/categories/';
 const webScraperBaseUrl = 'https://allegro.pl/kategoria/samochody-osobowe-4029?';
-
-async function getCategoriesNames(items, car, accessToken) {
-  const categories = {};
-  for (const key in items) {
-    if (!items.hasOwnProperty(key)) continue;
-    for (const offer of items[key]) {
-      if (!categories.hasOwnProperty(offer.category.id)) {
-        const data = await fetch(`${categoryBaseUrl}${offer.category.id}`, {
-          method: 'GET',
-          headers: {
-            Accept: 'application/vnd.allegro.public.v1+json',
-            Authorization: `Bearer ${accessToken}`
-          }
-        });
-
-        const json = await data.json();
-        categories[offer.category.id] = json.name;
-        if (json.leaf === true) {
-          const data = await fetch(`${categoryBaseUrl}${json.parent.id}`, {
-            method: 'GET',
-            headers: {
-              Accept: 'application/vnd.allegro.public.v1+json',
-              Authorization: `Bearer ${accessToken}`
-            }
-          });
-          const parentCategory = await data.json();
-          if (car.toLowerCase().indexOf(parentCategory.name.toLowerCase()) === -1)
-            categories[offer.category.id] = parentCategory.name + ' ' + categories[offer.category.id];
-        }
-      }
-    }
-  }
-  return categories;
-}
 
 async function getExtraProperties(url, params) {
   const body = new URLSearchParams();
@@ -57,11 +22,20 @@ async function getExtraProperties(url, params) {
     .toArray()
     .reduce((result, e) => {
       const key = $(e).attr('data-analytics-view-value');
+      // getting first 3 words of description as a car model
+      const car_model = $(e)
+        .find('h2')
+        .text()
+        .split(' ')
+        .slice(0, 3)
+        .join(' ');
+
       const info = $(e)
         .find('div > div:nth-child(2) > div > div:nth-last-child(1) > div > dl > dd')
         .toArray();
 
       result[key] = {
+        car_model,
         car_condition: $(info[0]).text(),
         car_productionYear: $(info[1]).text(),
         car_mileage: $(info[2]).text(),
@@ -103,14 +77,13 @@ async function getData(url, car, params) {
   const items = [];
 
   try {
-    const categories = await getCategoriesNames(json.items, car, accessToken);
     for (const key in json.items) {
       if (!json.items.hasOwnProperty(key)) continue;
       json.items[key].map(offer => {
         items.push({
           car_id: offer.id,
           car_name: car,
-          car_model: categories[offer.category.id],
+          car_model: extraData[offer.id].car_model ? extraData[offer.id].car_model : null,
           car_description: offer.name,
           car_productionYear: extraData[offer.id].car_productionYear ? extraData[offer.id].car_productionYear : null,
           car_mileage: extraData[offer.id].car_mileage ? extraData[offer.id].car_mileage : null,

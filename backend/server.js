@@ -26,7 +26,7 @@ otomotoRoute.route('/:car').get(async (req, res) => {
     if (!req.query.hasOwnProperty(key)) continue;
     params[bodyNames.otomoto[key]] = req.query[key];
   }
-  getOtoMotoData(url, req.params.car, params)
+  getOtoMotoData(url, req.params.car, params, 1)
     .then(data => {
       res.json(data);
     })
@@ -39,8 +39,9 @@ allegroRoute.route('/:car').get(async (req, res) => {
   const url = 'https://api.allegro.pl/offers/listing?';
   const params = {
     [bodyNames.allegro.api.category]: 4029,
-    [bodyNames.allegro.api.limit]: 10,
-    [bodyNames.allegro.api.carName]: req.params.car
+    [bodyNames.allegro.api.carName]: req.params.car,
+    [bodyNames.allegro.api.limit]: 60, // the maximum number of offers in a response (60 is max)
+    [bodyNames.allegro.api.offset]: 0
   };
   for (const key in req.query) {
     if (!req.query.hasOwnProperty(key)) continue;
