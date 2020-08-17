@@ -11,6 +11,9 @@ async function getCurrentAuthFile() {
 
 async function refreshToken() {
   const authFile = await getCurrentAuthFile();
+  if (!authFile.allegro.clientId || !authFile.allegro.clientSecret || !authFile.allegro.refreshToken) {
+    return null;
+  }
   const currentRefreshToken = authFile.allegro.refreshToken;
   const URL = `https://allegro.pl/auth/oauth/token?grant_type=refresh_token&refresh_token=${currentRefreshToken}`;
   const res = await fetch(URL, {

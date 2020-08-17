@@ -36,7 +36,11 @@ function App() {
       `${APICallURL}:${APICallPORT}/${allegroEndpoint}/${formData.query}?${params}` // allegro call
     ];
 
-    const fetchPromises = fetchUrls.map(url => fetch(url).then(response => response.json()));
+    const fetchPromises = fetchUrls.map(url =>
+      fetch(url)
+        .then(response => response.json())
+        .catch(err => console.error(err))
+    );
     Promise.all(fetchPromises).then(results => {
       const data = {};
       for (const result of results) {
@@ -45,6 +49,7 @@ function App() {
         }
       }
 
+      console.log(data);
       setApiData(data);
       setLoading(false);
       setNeverFetched(false);
