@@ -2,9 +2,12 @@ import React from 'react';
 import '../tailwind.generated.css';
 
 function List(props) {
+  function handleChangeSavedCars(item) {
+    props.onChangeSavedCars(item);
+  }
+
   const carItems = () => {
     const output = [];
-    console.log(props);
     const allegroStyle = 'bg-orange-100 hover:bg-orange-200';
     const otomotoStyle = 'bg-red-100 hover:bg-red-200';
 
@@ -12,20 +15,29 @@ function List(props) {
       props.data[key].items.map(item => {
         output.push(
           // <span>{key === 'allegro' ? 'allegro' : 'otomoto'}</span>
-          <a
+          <div
             className={
               'block mb-4 max-w-2xl mx-auto flex p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-500 ' +
               (key === 'allegro' ? allegroStyle : otomotoStyle)
             }
-            href={item.car_fullPage}
-            target="_blank"
-            rel="noopener noreferrer"
           >
-            <img className="w-48 object-scale-down" src={item.car_image} alt={item.car_model} />
+            <a href={item.car_fullPage} target="_blank" rel="noopener noreferrer">
+              <img
+                className="w-48 object-scale-down"
+                src={item.car_image}
+                alt={item.car_model}
+                style={props.settings.images ? null : { display: 'none' }}
+              />
+            </a>
             {/* right panel */}
             <div className="flex-col my-auto mx-auto ml-6">
               <h4 className="text-2xl text-gray-900 leading-tight">{item.car_model}</h4>
-              <p className="text-base text-gray-600 leading-normal mb-2">{item.car_description}</p>
+              <p
+                className="text-base text-gray-600 leading-normal mb-2"
+                style={props.settings.description ? null : { display: 'none' }}
+              >
+                {item.car_description}
+              </p>
               {/* extra info */}
               <div className="flex mb-2">
                 <div className="flex-auto text-center mr-4">
@@ -51,8 +63,11 @@ function List(props) {
                   {item.car_price} {item.car_priceCurrency}
                 </p>
               </div>
+              <div onClick={() => handleChangeSavedCars(item)} style={{ textAlign: 'right' }}>
+                <p>Zapisz</p>
+              </div>
             </div>
-          </a>
+          </div>
         );
       });
     }

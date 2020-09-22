@@ -4,6 +4,10 @@ const bodyNames = {
     priceTo: 'search[filter_float_price:to]',
     carName: 'search[filter_enum_make]',
     category: 'search[category_id]',
+    hpFrom: 'search[filter_float_engine_power:from]',
+    productionYearFrom: 'search[filter_float_year:from]',
+    productionYearTo: 'search[filter_float_year:to]',
+    hpTo: 'search[filter_float_engine_power:to]',
     query: 'q',
     page: 'page' // todo
   },

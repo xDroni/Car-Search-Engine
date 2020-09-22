@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Form from './components/Form';
+import Settings from './components/Settings';
 import List from './components/List';
+import SavedCars from './components/SavedCars';
 
 const APICallURL = 'http://localhost';
 const APICallPORT = 4000;
@@ -11,12 +13,49 @@ function App() {
   const [formData, setFormData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [neverFetched, setNeverFetched] = useState(true);
+  const [settings, setSettings] = useState({
+    images: true,
+    price: true
+  });
   const [apiData, setApiData] = useState({});
+
+  let parsedCars = [];
+
+  try {
+    parsedCars = JSON.parse(localStorage.getItem('savedCars')) || [];
+  } catch (e) {
+    console.error(e);
+  }
+
+  const [savedCars, setSavedCars] = useState(parsedCars);
 
   const handleFormSubmit = params => {
     setFormData({
       ...params
     });
+  };
+
+  const handleChangeSettings = params => {
+    setSettings({
+      ...params
+    });
+  };
+
+  const handleSavedCars = item => {
+    const t = [...savedCars];
+    if (!savedCars.some(e => e.car_fullPage === item.car_fullPage)) t.push(item);
+    localStorage.setItem('savedCars', JSON.stringify(t));
+    setSavedCars(t);
+  };
+
+  const handleDeleteSavedCar = car => {
+    let t = [...savedCars];
+    console.log(t);
+    t = t.filter(item => item.car_fullPage !== car.car_fullPage);
+    console.log(t);
+    localStorage.setItem('savedCars', JSON.stringify(t));
+
+    setSavedCars(t);
   };
 
   useEffect(() => {
@@ -49,7 +88,6 @@ function App() {
         }
       }
 
-      console.log(data);
       setApiData(data);
       setLoading(false);
       setNeverFetched(false);
@@ -59,7 +97,15 @@ function App() {
   return (
     <div className="App mx-4 mt-4">
       <Form onSubmit={handleFormSubmit} />
-      <List data={apiData} isLoading={loading} neverFetched={neverFetched} />
+      <Settings onChange={handleChangeSettings} settings={settings} setSettings={setSettings} />
+      <SavedCars savedCars={savedCars} handleDeleteSavedCar={handleDeleteSavedCar} />
+      <List
+        data={apiData}
+        isLoading={loading}
+        neverFetched={neverFetched}
+        settings={settings}
+        onChangeSavedCars={handleSavedCars}
+      />
     </div>
   );
 }

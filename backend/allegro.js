@@ -18,7 +18,7 @@ async function getExtraProperties(url, params) {
 
   const $ = cheerio.load(html);
 
-  return $('div[id="opbox-listing--base"] article')
+  return $('div[class="opbox-listing"] article')
     .toArray()
     .reduce((result, e) => {
       const key = $(e).attr('data-analytics-view-value');

@@ -17,9 +17,9 @@ function Form(props) {
   }
 
   return (
-    <form className="w-full max-w-lg" onSubmit={handleSubmit}>
+    <form className="w-full" onSubmit={handleSubmit}>
       <div className="flex flex-wrap">
-        <div className="w-full md:w-40 mr-2">
+        <div className="w-full md:w-40 mr-8">
           <label className="block uppercase tracking-wide text-gray-600 text-xs font-bold mb-2" htmlFor="query">
             Samochód
           </label>
@@ -46,7 +46,7 @@ function Form(props) {
             value={params.priceFrom}
           />
         </div>
-        <div className="w-full md:w-24 mr-2">
+        <div className="w-full md:w-24 mr-8">
           <label className="block uppercase tracking-wide text-gray-600 text-xs font-bold mb-2" htmlFor="priceTo">
             Cena do
           </label>
@@ -59,14 +59,66 @@ function Form(props) {
             value={params.priceTo}
           />
         </div>
-        <div className="md:w-1/3">
-          <button
-            className="shadow bg-blue-500 hover:bg-blue-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
-            type="submit"
-          >
-            Szukaj
-          </button>
+        <div className="w-full md:w-24 mr-2">
+          <label className="block uppercase tracking-wide text-gray-600 text-xs font-bold mb-2" htmlFor="priceTo">
+            Moc od
+          </label>
+          <input
+            className="appearance-none block w-full bg-gray-200 text-gray-900 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+            id="hpFrom"
+            type="text"
+            placeholder="100"
+            onChange={handleChange}
+            value={params.hpFrom}
+          />
         </div>
+        <div className="w-full md:w-24 mr-8">
+          <label className="block uppercase tracking-wide text-gray-600 text-xs font-bold mb-2" htmlFor="priceTo">
+            Moc do
+          </label>
+          <input
+            className="appearance-none block w-full bg-gray-200 text-gray-900 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+            id="hpTo"
+            type="text"
+            placeholder="200"
+            onChange={handleChange}
+            value={params.hpTo}
+          />
+        </div>
+        <div className="w-full md:w-32 mr-2">
+          <label className="block uppercase tracking-wide text-gray-600 text-xs font-bold mb-2" htmlFor="priceTo">
+            Rok produkcji od
+          </label>
+          <input
+            className="appearance-none block w-full bg-gray-200 text-gray-900 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+            id="productionYearFrom"
+            type="text"
+            placeholder="2013"
+            onChange={handleChange}
+            value={params.productionYearFrom}
+          />
+        </div>
+        <div className="w-full md:w-32 mr-8">
+          <label className="block uppercase tracking-wide text-gray-600 text-xs font-bold mb-2" htmlFor="priceTo">
+            Rok produkcji do
+          </label>
+          <input
+            className="appearance-none block w-full bg-gray-200 text-gray-900 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+            id="productionYearTo"
+            type="text"
+            placeholder="2018"
+            onChange={handleChange}
+            value={params.productionYearTo}
+          />
+        </div>
+      </div>
+      <div className="md:w-1/3">
+        <button
+          className="shadow bg-blue-500 hover:bg-blue-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
+          type="submit"
+        >
+          Szukaj
+        </button>
       </div>
     </form>
   );
