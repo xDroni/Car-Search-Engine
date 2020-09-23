@@ -96,8 +96,10 @@ function App() {
 
   return (
     <div className="App mx-4 mt-4">
-      <Form onSubmit={handleFormSubmit} />
-      <Settings onChange={handleChangeSettings} settings={settings} setSettings={setSettings} />
+      <div className="flex mr-8">
+        <Form onSubmit={handleFormSubmit} />
+        <Settings onChange={handleChangeSettings} settings={settings} setSettings={setSettings} />
+      </div>
       <SavedCars savedCars={savedCars} handleDeleteSavedCar={handleDeleteSavedCar} />
       <List
         data={apiData}

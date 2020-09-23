@@ -13,17 +13,21 @@ function Settings(props) {
   }
 
   return (
-    <div>
-      <input onClick={handleChange} type="checkbox" id="images" name="images" checked={props.settings.images} />
-      <label htmlFor="images">Images</label>
-      <input
-        onClick={handleChange}
-        type="checkbox"
-        id="description"
-        name="description"
-        checked={props.settings.description}
-      />
-      <label htmlFor="description">Description</label>
+    <div className="w-32">
+      <div>
+        <input onClick={handleChange} type="checkbox" id="images" name="images" checked={props.settings.images} />
+        <label htmlFor="images">Images</label>
+      </div>
+      <div>
+        <input
+          onClick={handleChange}
+          type="checkbox"
+          id="description"
+          name="description"
+          checked={props.settings.description}
+        />
+        <label htmlFor="description">Description</label>
+      </div>
     </div>
   );
 }

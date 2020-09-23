@@ -5,9 +5,11 @@ const bodyNames = {
     carName: 'search[filter_enum_make]',
     category: 'search[category_id]',
     hpFrom: 'search[filter_float_engine_power:from]',
+    hpTo: 'search[filter_float_engine_power:to]',
     productionYearFrom: 'search[filter_float_year:from]',
     productionYearTo: 'search[filter_float_year:to]',
-    hpTo: 'search[filter_float_engine_power:to]',
+    mileageFrom: 'search[filter_float_mileage:from]',
+    mileageTo: 'search[filter_float_mileage:to]',
     query: 'q',
     page: 'page' // todo
   },
