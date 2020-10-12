@@ -50,7 +50,7 @@ async function getExtraProperties(url, params) {
 }
 
 async function getData(url, car, params) {
-  const accessToken = await authAllegro();
+  const accessToken = await authAllegro.refreshToken();
 
   if (!accessToken) {
     console.error('Cannot get allegro token');
@@ -99,10 +99,17 @@ async function getData(url, car, params) {
       });
     }
 
+    const available = parseInt(json.searchMeta.availableCount);
+    const currentPage = `${url}${body.toString()}`;
+    const nextOffset = parseInt(currentPage.match(/&offset=([0-9]+)/)[1]) + 60;
+    const prevOffset = parseInt(currentPage.match(/&offset=([0-9]+)/)[1]) - 60;
+
     return {
       allegro: {
-        available: json.searchMeta.availableCount,
+        available,
         total: json.searchMeta.totalCount,
+        nextOffset: nextOffset <= available ? nextOffset : null,
+        prevOffset: prevOffset >= 0 ? prevOffset : null,
         items
       }
     };

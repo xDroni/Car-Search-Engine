@@ -14,7 +14,6 @@ function List(props) {
     for (const key in props.data) {
       props.data[key].items.map(item => {
         output.push(
-          // <span>{key === 'allegro' ? 'allegro' : 'otomoto'}</span>
           <div
             className={
               'block mb-4 max-w-2xl mx-auto flex p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-500 ' +

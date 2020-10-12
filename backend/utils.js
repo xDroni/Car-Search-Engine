@@ -11,7 +11,7 @@ const bodyNames = {
     mileageFrom: 'search[filter_float_mileage:from]',
     mileageTo: 'search[filter_float_mileage:to]',
     query: 'q',
-    page: 'page' // todo
+    page: 'page'
   },
   allegro: {
     api: {

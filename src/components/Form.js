@@ -19,7 +19,7 @@ function Form(props) {
   return (
     <form className="w-full" onSubmit={handleSubmit}>
       <div className="flex flex-wrap">
-        <div className="w-full md:w-40 md:mr-8">
+        <div className="md:w-40 md:mr-8">
           <label className="block uppercase tracking-wide text-gray-600 text-xs font-bold mb-2" htmlFor="query">
             Samochód
           </label>
@@ -34,7 +34,7 @@ function Form(props) {
           {/*<p className="text-red-500 text-xs italic">Please fill out this field.</p>*/}
         </div>
         <div className="flex mb-8">
-          <div className="w-full md:w-32 md:mr-2">
+          <div className="w-full md:w-32 mr-2">
             <label className="block uppercase tracking-wide text-gray-600 text-xs font-bold mb-2" htmlFor="priceFrom">
               Cena od
             </label>
@@ -47,7 +47,7 @@ function Form(props) {
               value={params.priceFrom}
             />
           </div>
-          <div className="w-full md:w-32 md:mr-8">
+          <div className="w-full md:w-32 mr-8">
             <label className="block uppercase tracking-wide text-gray-600 text-xs font-bold mb-2" htmlFor="priceTo">
               Cena do
             </label>
@@ -62,7 +62,7 @@ function Form(props) {
           </div>
         </div>
         <div className="flex mb-8">
-          <div className="w-full md:w-32 md:mr-2">
+          <div className="w-full md:w-32 mr-2">
             <label className="block uppercase tracking-wide text-gray-600 text-xs font-bold mb-2" htmlFor="priceTo">
               Moc od
             </label>
@@ -75,7 +75,7 @@ function Form(props) {
               value={params.hpFrom}
             />
           </div>
-          <div className="w-full md:w-32 md:mr-8">
+          <div className="w-full md:w-32 mr-8">
             <label className="block uppercase tracking-wide text-gray-600 text-xs font-bold mb-2" htmlFor="priceTo">
               Moc do
             </label>
@@ -90,7 +90,7 @@ function Form(props) {
           </div>
         </div>
         <div className="flex mb-8">
-          <div className="w-full md:w-32 md:mr-2">
+          <div className="w-full md:w-32 mr-2">
             <label className="block uppercase tracking-wide text-gray-600 text-xs font-bold mb-2" htmlFor="priceTo">
               Rok produkcji od
             </label>
@@ -103,7 +103,7 @@ function Form(props) {
               value={params.productionYearFrom}
             />
           </div>
-          <div className="w-full md:w-32 md:mr-8">
+          <div className="w-full md:w-32 mr-8">
             <label className="block uppercase tracking-wide text-gray-600 text-xs font-bold mb-2" htmlFor="priceTo">
               Rok produkcji do
             </label>
@@ -118,7 +118,7 @@ function Form(props) {
           </div>
         </div>
         <div className="flex mb-8">
-          <div className="w-full md:w-32 md:mr-2">
+          <div className="w-full md:w-32 mr-2">
             <label className="block uppercase tracking-wide text-gray-600 text-xs font-bold mb-2" htmlFor="priceTo">
               Przebieg od
             </label>
@@ -131,7 +131,7 @@ function Form(props) {
               value={params.mileageFrom}
             />
           </div>
-          <div className="w-full md:w-32 md:mr-2">
+          <div className="w-full md:w-32 mr-8">
             <label className="block uppercase tracking-wide text-gray-600 text-xs font-bold mb-2" htmlFor="priceTo">
               Przebieg do
             </label>

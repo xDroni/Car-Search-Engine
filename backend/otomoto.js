@@ -2,12 +2,13 @@ const fetch = require('node-fetch');
 const cheerio = require('cheerio');
 const { URLSearchParams } = require('url');
 
-async function getData(url, car, params, page) {
+async function getData(url, car, params) {
   const body = new URLSearchParams();
   for (const k in params) {
     if (!params.hasOwnProperty(k)) continue;
     body.append(k, params[k]);
   }
+
   const data = await fetch(url, { method: 'POST', body: body })
     .then(res => res.text())
     .then(res => res)
@@ -23,21 +24,29 @@ async function getData(url, car, params, page) {
       .text()
       .replace(/[()]/g, '') || null;
 
-  const paginationUrl =
+  const currentPage =
+    parseInt($('ul[class="om-pager rel"]')
+      .find('li[class="active"]')
+      .text()) || null;
+
+  const nextPage =
     $('ul[class="om-pager rel"]')
-      .find('li > a')
-      .attr('href')
-      .replace(/&page=[0-9]+/, '') || null;
+      .find('li[class="next abs"] > a')
+      .attr('href') || null;
+
+  const prevPage =
+    $('ul[class="om-pager rel"]')
+      .find('li[class="prev abs"] > a')
+      .attr('href') || null;
 
   const carEntries = $('article');
 
-  // const carEntries = carList.slice(((page - 1) * offset) % 30, (((page - 1) * offset) % 30) + offset);
-
   return {
     otomoto: {
-      current: 1,
+      currentPage: currentPage,
+      nextPage: nextPage ? currentPage + 1 : null,
+      prevPage,
       total: parseInt(count.replace(/\s/g, '')),
-      paginationUrl,
       items: carEntries
         .map((i, e) => {
           let image;
