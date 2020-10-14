@@ -2,7 +2,25 @@ const fetch = require('node-fetch');
 const cheerio = require('cheerio');
 const { URLSearchParams } = require('url');
 
+async function getPage(car, params) {
+  const URL = `https://www.otomoto.pl/osobowe/q-${car}/?`;
+  const p = new URLSearchParams(params);
+
+  const data = await fetch(URL + p)
+    .then(res => res.text())
+    .then(res => res)
+    .catch(err => {
+      return Promise.reject(err);
+    });
+
+  return parseData(data);
+}
+
 async function getData(url, car, params) {
+  if(params.hasOwnProperty('page')) {
+    return getPage(car, params);
+  }
+
   const body = new URLSearchParams();
   for (const k in params) {
     if (!params.hasOwnProperty(k)) continue;
@@ -16,6 +34,10 @@ async function getData(url, car, params) {
       return Promise.reject(err);
     });
 
+  return parseData(data, car);
+}
+
+async function parseData(data, car) {
   const $ = cheerio.load(data);
 
   const count =
@@ -45,7 +67,7 @@ async function getData(url, car, params) {
     otomoto: {
       currentPage: currentPage,
       nextPage: nextPage ? currentPage + 1 : null,
-      prevPage,
+      prevPage: prevPage ? currentPage - 1 : null,
       total: parseInt(count.replace(/\s/g, '')),
       items: carEntries
         .map((i, e) => {

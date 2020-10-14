@@ -92,7 +92,7 @@ async function getData(url, car, params) {
           car_city: extraData[offer.id] !== undefined ? extraData[offer.id].car_city : null,
           car_region: params[bodyNames.allegro.api.region] || null,
           car_fullPage: offer.vendor ? offer.vendor.url : `${offerBaseUrl}${offer.id}`,
-          car_image: offer.images[0].url.replace('/original/', '/s192/'),
+          car_image: offer.images[0] !== undefined ? offer.images[0].url.replace('/original/', '/s192/') : null,
           car_price: offer.sellingMode.price.amount,
           car_priceCurrency: offer.sellingMode.price.currency
         });

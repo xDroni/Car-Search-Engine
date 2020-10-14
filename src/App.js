@@ -19,8 +19,6 @@ function App() {
     price: true
   });
   const [apiData, setApiData] = useState({});
-  const [pagination, setPagination] = useState({ next: null, previous: null, current: 1 });
-  const [currentParams, setCurrentParams] = useState(null);
 
   let parsedCars = [];
 
@@ -59,13 +57,18 @@ function App() {
     setSavedCars(t);
   };
 
-  const handlePagination = async (state) => {
-    if (apiData) console.log(apiData);
-    const otomotoNextPage = apiData.otomoto.nextPage;
-    const allegroNextOffset = apiData.allegro.nextOffset;
+  const checkAllegroAuth = async () => {
+    const data = await fetch('http://localhost:4000/allegroAuth/check')
+    return data.status;
+  };
 
-    const otomotoPrevPage = apiData.otomoto.prevPage;
-    const allegroPrevOffset = apiData.allegro.prevOffset;
+  const handlePagination = async (state) => {
+    const allegroAuthStatus = await checkAllegroAuth();
+    const otomotoNextPage = apiData.otomoto !== undefined ? apiData.otomoto.nextPage : null;
+    const allegroNextOffset = apiData.allegro !== undefined ? apiData.allegro.nextOffset : null;
+
+    const otomotoPrevPage = apiData.otomoto !== undefined ? apiData.otomoto.prevPage : null;
+    const allegroPrevOffset = apiData.allegro !== undefined ? apiData.allegro.prevOffset : null;
 
     const esc = encodeURIComponent;
     const params = Object.keys(formData)
@@ -78,37 +81,42 @@ function App() {
 
     let fetchUrls = [];
 
-    if(state === 'next') {
-      fetchUrls.push(
-        `${APICallURL}:${APICallPORT}/${otomotoEndpoint}/${formData.query}?${params}&page=${otomotoNextPage}`, // otomoto call
-        `${APICallURL}:${APICallPORT}/${allegroEndpoint}/${formData.query}?${params}&offset=${allegroNextOffset}` // allegro call
-      )
-    }
-
-    if(state === 'prev') {
-      fetchUrls.push(
-        `${APICallURL}:${APICallPORT}/${otomotoEndpoint}/${formData.query}?${params}&page=${otomotoPrevPage}`, // otomoto call
-        `${APICallURL}:${APICallPORT}/${allegroEndpoint}/${formData.query}?${params}&offset=${allegroPrevOffset}` // allegro call
-      )
-    }
-    console.log(fetchUrls);
-
-    const fetchPromises = fetchUrls.map(url =>
-      fetch(url)
-        .then(response => response.json())
-        .catch(err => console.error(err))
-    );
-    Promise.all(fetchPromises).then(results => {
-      const data = {};
-      for (const result of results) {
-        for (const key in result) {
-          data[key] = result[key];
-        }
+    if (state === 'next') {
+      if (otomotoNextPage !== null) {
+        fetchUrls.push(`${APICallURL}:${APICallPORT}/${otomotoEndpoint}/${formData.query}?${params}&page=${otomotoNextPage}`);
       }
 
-      setApiData(data);
+      if (allegroAuthStatus === 200 && allegroNextOffset !== null) {
+        fetchUrls.push(`${APICallURL}:${APICallPORT}/${allegroEndpoint}/${formData.query}?${params}&offset=${allegroNextOffset}`);
+      }
+    } else if (state === 'prev') {
+      if (otomotoPrevPage !== null) {
+        fetchUrls.push(`${APICallURL}:${APICallPORT}/${otomotoEndpoint}/${formData.query}?${params}&page=${otomotoPrevPage}`);
+      }
 
-    });
+      if (allegroAuthStatus === 200 && allegroPrevOffset !== null) {
+        fetchUrls.push(`${APICallURL}:${APICallPORT}/${allegroEndpoint}/${formData.query}?${params}&offset=${allegroPrevOffset}`);
+      }
+    }
+
+    if (fetchUrls.length > 0) {
+      const fetchPromises = fetchUrls.map(url =>
+        fetch(url)
+          .then(response => response.json())
+          .catch(err => console.error(err))
+      );
+      Promise.all(fetchPromises).then(results => {
+        const data = {};
+        for (const result of results) {
+          for (const key in result) {
+            data[key] = result[key];
+          }
+        }
+
+        setApiData(data);
+
+      });
+    }
   };
 
   useEffect(() => {
@@ -142,7 +150,6 @@ function App() {
       }
 
       setApiData(data);
-      setCurrentParams(formData);
       setLoading(false);
       setNeverFetched(false);
     });
@@ -159,8 +166,14 @@ function App() {
         </div>
       </div>
       <div className="flex justify-center mb-3 ">
-        <button style={neverFetched ? {display: 'none'} : null} className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l mr-2" onClick={() => handlePagination('prev')}>Poprzednia strona</button>
-        <button style={neverFetched ? {display: 'none'} : null} className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r" onClick={() => handlePagination('next')}>Następna strona</button>
+        <button style={neverFetched ? { display: 'none' } : null}
+                className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l mr-2"
+                onClick={() => handlePagination('prev')}>Poprzednia strona
+        </button>
+        <button style={neverFetched ? { display: 'none' } : null}
+                className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r"
+                onClick={() => handlePagination('next')}>Następna strona
+        </button>
       </div>
       <List
         data={apiData}
